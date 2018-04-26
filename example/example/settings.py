@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     'django_roles',
     'app1',
@@ -127,3 +128,5 @@ STATICFILES_DIRS = (
 )
 
 DJANGO_ROLES_CONFIRMATION_REQUIRED = True
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+SITE_ID = 1
