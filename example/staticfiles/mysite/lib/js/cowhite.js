@@ -1,0 +1,1 @@
+../../../../django_roles/static/django_roles/lib/js/cowhite.js

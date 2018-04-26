@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block meta_title %}{% endblock %} | Cowhite Software</title>
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}django_roles/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+</head>
+<body>
+  {% include  "includes/navbar.html" %}
+  <div class='container'>
+  {% block content %}
+
+  {% endblock %}
+  </div>
+  {% include  "includes/form_modal.html" %}
+
+  <footer class='footer'>
+
+  </footer>
+
+  <script type="text/javascript" src="{{ STATIC_URL }}django_roles/lib/js/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}django_roles/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}django_roles/lib/js/cowhite.js"></script>
+  {% block js %}{% endblock%}
+
+</body>
+</html>

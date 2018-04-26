@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-organization" data-url="{% url 'new-organization' %}" data-aftersuccess="organizationsList" >Add Organization</a>
+  <a href="#organizations" class='btn btn-primary change-tab' data-tab="organizations">Organizations</a>
+
+  {% include "app1/organizations/sections/organizations.html" %}
+
+{% endblock %}
+{% block js %}
+  <script type="text/javascript">
+    var defaultTab = "organizations";
+  </script>
+  <script type="text/javascript" src="{{ STATIC_URL }}mysite/js/organization.js"></script>
+{% endblock %}

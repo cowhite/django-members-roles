@@ -1,0 +1,20 @@
+{% extends 'django_roles/base.html' %}
+
+{% block content %}
+<div id='manage-staff' data-content_type_id="{{ content_type_id }}" data-object_id="{{ object_id }}">
+  <h1>Manage staff</h1>
+
+  <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-staff" data-url="{% url 'add-staff' content_type_id object_id %}" data-aftersuccess="staffList" >Add Staff</a>
+  <a href="#staff" class='btn btn-primary change-tab' data-data='{"url":"{% url "staff-list" content_type_id object_id %}"}' data-tab="staff">Staff List</a>
+
+  {% include "django_roles/sections/staff.html" %}
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  var defaultTab = "staff";
+</script>
+<script type="text/javascript" src="{{ STATIC_URL }}django_roles/js/django_roles.js"></script>
+{% endblock %}

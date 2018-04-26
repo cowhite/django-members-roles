@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-12">
+    {% if organizations %}
+      {% for organization in organizations %}
+        <div style="margin-top: 10px">
+          <div class="col-md-3">
+            {{ organization.name}}
+          </div>
+          <div class="col-md-9">
+              <a href="{% url 'manage-staff' organization.get_content_type.id organization.id %}">Manage staff</a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No Organization add yet.</p>
+    {% endif %}
+  </div>
+</div>
