@@ -1,7 +1,7 @@
 {% extends 'django_roles/base.html' %}
 
 {% block content %}
-  {% if invitation.accepted_invitation or invitation.c%}
+  {% if invitation.accepted_invitation or invitation.decline_invitation%}
     {% if invitation.accepted_invitation %}
       <p>You alreday accepted this invitation</p>
     {% elif invitation.decline_invitation %}

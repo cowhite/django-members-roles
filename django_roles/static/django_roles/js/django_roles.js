@@ -59,6 +59,29 @@ $(function(){
     console.log("roles tab opened");
   });
 
+  $(document).on("change", ".select-role", function(){
+    var roleId = $(this).val(),
+        url = $(this).data('url'),
+        userId = $(this).data('user-id');
+    data = {
+      "csrfmiddlewaretoken": csrfmiddlewaretoken,
+      "user_id":userId,
+      "role_id": roleId
+    }
+    $.ajax({
+      url: url,
+      data: data,
+      type: "POST",
+      success: function(res){
+        if(res.error) {
+          console.log(res.error);
+        }
+        else{
+          staffList();
+        }
+      }
+    });
+  });
   onLoad();
 
 })

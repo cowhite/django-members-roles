@@ -13,10 +13,10 @@
     {% if staff %}
       {% for member in staff %}
         <div class="col-md-3">
-          {{ member.username }}
+          {{ member.user.username }}
         </div>
         <div class="col-md-9">
-          roles
+          {% include "django_roles/includes/roles_select.html" %}
         </div>
       {% endfor %}
     {% else %}

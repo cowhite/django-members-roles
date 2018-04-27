@@ -113,19 +113,25 @@ class StaffListView(generic_views.TemplateView):
             id=self.kwargs['content_type_id'])
         object_id = self.kwargs['object_id']
         confirmation_required = app_settings.DJANGO_ROLES_CONFIRMATION_REQUIRED
+        roles = Role.objects.filter(
+            content_type=content_type, object_id=object_id)
         if not confirmation_required:
-            invitations = list(MembershipInvitation.objects.filter(
+            invitations = MembershipInvitation.objects.filter(
                 content_type=content_type,
-                object_id=object_id).exclude(decline_invitation=True).values_list("user_id", flat=True))
+                object_id=object_id).exclude(
+                decline_invitation=True, user=None)
+            invitations_list = list(invitations.values_list("user_id", flat=True))
         else:
-            invitations = list(MembershipInvitation.objects.filter(
+            invitations = MembershipInvitation.objects.filter(
                 content_type=content_type,
                 object_id=object_id,
-                accepted_invitation=True).values_list("user_id", flat=True))
+                accepted_invitation=True)
+            invitations_list = list(invitations.values_list("user_id", flat=True))
 
-        users = User.objects.filter(id__in=invitations)
-
-        context['staff'] = users
+        users = User.objects.filter(id__in=invitations_list)
+        generic_members = GenericMember.objects.filter(user_id__in=invitations_list)
+        context['staff'] = generic_members
+        context['roles'] = roles
         return context
 
 
@@ -150,23 +156,52 @@ class AcceptDeclineInvitationView(generic_views.View):
             try:
                 invitation = MembershipInvitation.objects.get(code=uu_id,
                                                               email=user.email)
-                if accept_status:
+                print(invitation.content_type_id)
+                print(invitation.object_id)
+                if accept_status == "True":
                     invitation.accepted_invitation = True
                     invitation.accepted_time = timezone.now()
-
-                else:
+                    GenericMember.objects.get_or_create(
+                        content_type=invitation.content_type,
+                        object_id=invitation.object_id, user=user)
+                elif accept_status == "False":
                     invitation.decline_invitation = True
                     invitation.decline_time = timezone.now()
+                else:
+                    pass
                 invitation.user = user
                 invitation.save()
             except MembershipInvitation.DoesNotExist:
                 return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('messages'))
-            if accept_status:
+            if accept_status =="True":
                 return redirect("%s?msg=Thank you for accepting this invitation" % reverse('messages'))
-            else:
+            elif accept_status == "False":
                 return redirect("%s?msg=You declined this invitation" % reverse('messages'))
+            else:
+                return redirect("%s?msg=Somthing went wrong please contact admin" %reverse('messages'))
 
 
 def message_view(request):
     msg = request.GET['msg']
     return render(request, 'django_roles/includes/invitation_response_message.html', {"msg": msg})
+
+class UpdateRoletoMemeber(generic_views.View):
+
+    def post(self, request, *args, **kwargs):
+        role_id = self.request.POST.get("role_id", None)
+        user_id = self.request.POST.get("user_id", None)
+        content_type = ContentType.objects.get(
+            id=self.kwargs['content_type_id'])
+        object_id = self.kwargs['object_id']
+        if role_id:
+            staff_memeber = get_object_or_404(GenericMember,
+             content_type=content_type, object_id=object_id, user_id=user_id)
+            if role_id == "null":
+                staff_memeber.role = None
+            else:
+                role = get_object_or_404(Role, id=role_id)
+                staff_memeber.role=role
+            staff_memeber.save()
+            return JsonResponse({"message":"success"})
+        else:
+            return JsonResponse({"error":True, "message":"required role id"})

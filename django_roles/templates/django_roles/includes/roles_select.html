@@ -1,0 +1,12 @@
+<select class='select-role' data-user-id="{{ member.user.id}}" data-url="{% url 'update-member-role' member.content_type_id member.object_id %}">
+  <option value='null'>--------</option>
+  {% if roles %}
+    {% for role in roles %}
+      {% ifequal member.role_id|stringformat:"s" role.id|stringformat:"s" %}
+        <option value="{{ role.id }}" selected>{{ role.name }}</option>
+      {% else%}
+        <option value="{{ role.id }}">{{ role.name }}</option>
+      {% endifequal %}
+    {% endfor %}
+  {% endif %}
+</select>

@@ -59,7 +59,7 @@ class MembershipInvitation(DateTimeBase):
     accepted_invitation = models.NullBooleanField()
     accepted_time = models.DateTimeField(null=True, blank=True)
     decline_time = models.DateTimeField(null=True, blank=True)
-    decline_invitaion = models.NullBooleanField()
+    decline_invitation = models.NullBooleanField()
     invalid_email = models.BooleanField(default=False)
     invitation_sent = models.BooleanField(default=False)
     invited_by = models.ForeignKey(
