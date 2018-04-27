@@ -1,0 +1,20 @@
+{% extends 'django_roles/base.html' %}
+
+{% block content %}
+  {% if invitation.accepted_invitation or invitation.c%}
+    {% if invitation.accepted_invitation %}
+      <p>You alreday accepted this invitation</p>
+    {% elif invitation.decline_invitation %}
+      <p>You alreday declined this invitation</p>
+    {% endif %}
+  {% else %}
+    <p>{{ invitation.invited_by}} invited you to join {{ invitation.content_object }}</p>
+    <p>You can accept or decline this invitation</p>
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" class="hide" name="uu_id" value="{{ uu_id }}">
+      <button class="btn btn-primary" name="accept_status" type="submit" value="True">Accept</button>
+      <button class="btn btn-primary" name="accept_status" type="submit" value="False">Decline</button>
+    </form>
+  {% endif %}
+{% endblock %}

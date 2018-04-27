@@ -11,7 +11,7 @@ class BulkInvitationForm(forms.ModelForm):
         exclude = ('invited_by', 'content_type', 'object_id')
 
     def save(self, user, content_type, object_id):
-        instance = super(OrganizationForm, self).save(commit=False)
+        instance = super(BulkInvitationForm, self).save(commit=False)
         instance.invited_by = user
         instance.content_type = content_type
         instance.object_id = object_id

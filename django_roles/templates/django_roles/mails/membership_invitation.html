@@ -1,0 +1,9 @@
+{% extends 'django_roles/mails/base.html' %}
+
+{% block content %}
+  <p>Hello,</p>
+  <p>{{ invited_by }} invited you to join {{ invitation.content_object }}</p>
+  <p> Please click this  <a href="{{ invitation_url }}">link</a> to accept the invitation.</p>
+
+ <p>Thanks !</p>
+{% endblock %}

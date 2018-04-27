@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.contrib.contenttypes.models import ContentType
 from django.views import generic as generic_views
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.utils import timezone
+from django.http import JsonResponse
 
 from .models import *
 from .forms import *
@@ -66,3 +69,46 @@ class StaffListView(generic_views.TemplateView):
 
         context['staff'] = users
         return context
+
+
+class AcceptDeclineInvitationView(generic_views.View):
+
+    def get(self, request, * args, **kwargs):
+        uu_id = kwargs['uu_id']
+        invitation = None
+        try:
+            invitation = MembershipInvitation.objects.get(
+                code=uu_id, email=self.request.user.email)
+        except MembershipInvitation.DoesNotExist:
+            return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('messages'))
+        return render(request, "django_roles/includes/accept_decline_invitation.html",
+                      {"uu_id": uu_id, "invitation": invitation})
+
+    def post(self, request, *args, **kwargs):
+        uu_id = self.request.POST.get("uu_id", None)
+        accept_status = self.request.POST.get("accept_status", None)
+        user = self.request.user
+        if uu_id:
+            try:
+                invitation = MembershipInvitation.objects.get(code=uu_id,
+                                                              email=user.email)
+                if accept_status:
+                    invitation.accepted_invitation = True
+                    invitation.accepted_time = timezone.now()
+
+                else:
+                    invitation.decline_invitation = True
+                    invitation.decline_time = timezone.now()
+                invitation.user = user
+                invitation.save()
+            except MembershipInvitation.DoesNotExist:
+                return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('messages'))
+            if accept_status:
+                return redirect("%s?msg=Thank you for accepting this invitation" % reverse('messages'))
+            else:
+                return redirect("%s?msg=You declined this invitation" % reverse('messages'))
+
+
+def message_view(request):
+    msg = request.GET['msg']
+    return render(request, 'django_roles/includes/invitation_response_message.html', {"msg": msg})
