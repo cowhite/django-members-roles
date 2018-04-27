@@ -6,8 +6,12 @@
 
   <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-staff" data-url="{% url 'add-staff' content_type_id object_id %}" data-aftersuccess="staffList" >Add Staff</a>
   <a href="#staff" class='btn btn-primary change-tab' data-data='{"url":"{% url "staff-list" content_type_id object_id %}"}' data-tab="staff">Staff List</a>
+  <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-role" data-url="{% url 'add-role' content_type_id object_id %}" data-aftersuccess="roleList" >Add Role</a>
+  <a href="#roles" class='btn btn-primary change-tab' data-data='{"url":"{% url "role-list" content_type_id object_id %}"}' data-tab="staff">Role List</a>
 
   {% include "django_roles/sections/staff.html" %}
+  {% include "django_roles/sections/roles.html" %}
+
 </div>
 
 {% endblock %}

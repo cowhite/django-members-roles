@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from django.views.generic import FormView, TemplateView, UpdateView, DeleteView, View
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from .models import Organization
 from .forms import OrganizationForm
@@ -16,8 +17,8 @@ class OrganizationCreateView(FormView):
 
     def form_invalid(self, form):
         res = super(JobCreateView, self).form_invalid(form)
-        res.render()
-        return JsonResponse({"error": True, "html": res.content})
+        html = render_to_string(self.template_name,{"form":form})
+        return JsonResponse({"error": True, "html": html})
 
 
 class OrganizationFullView(TemplateView):

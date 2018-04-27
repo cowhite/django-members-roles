@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-md-12">
+    {% if roles %}
+      {% for role in roles %}
+        <div>{{ role.name }}</div>
+      {% endfor %}
+    {% else %}
+      <p>No roles added yet.</p>
+    {% endif %}
+  </div>
+</div>

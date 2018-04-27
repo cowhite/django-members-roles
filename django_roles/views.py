@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from .models import *
 from .forms import *
@@ -41,8 +42,40 @@ class AddStaffView(generic_views.FormView):
 
     def form_invalid(self, form):
         res = super(AddStaffView, self).form_invalid(form)
-        res.render()
-        return JsonResponse({"error": True, "html": res.content})
+        html = render_to_string(self.template_name, {"form": form})
+        return JsonResponse({"error": True, "html": html})
+
+
+class AddRoleView(generic_views.FormView):
+    template_name = "django_roles/forms/add_role.html"
+    form_class = RoleForm
+
+    def form_valid(self, form):
+        content_type = ContentType.objects.get(
+            id=self.kwargs['content_type_id'])
+        object_id = self.kwargs['object_id']
+        instance = form.save(content_type=content_type, object_id=object_id)
+        return JsonResponse({"message": "success"})
+
+    def form_invalid(self, form):
+        res = super(AddRoleView, self).form_invalid(form)
+        html = render_to_string(self.template_name, {"form": form})
+        return JsonResponse({"error": True, "html": html})
+
+
+class RoleListView(generic_views.TemplateView):
+    template_name = "django_roles/list/roles.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(RoleListView,
+                        self).get_context_data(*args, **kwargs)
+        content_type = ContentType.objects.get(
+            id=self.kwargs['content_type_id'])
+        object_id = self.kwargs['object_id']
+        roles = Role.objects.filter(
+            content_type=content_type, object_id=object_id)
+        context['roles'] = roles
+        return context
 
 
 class StaffListView(generic_views.TemplateView):
@@ -58,7 +91,7 @@ class StaffListView(generic_views.TemplateView):
         if not confirmation_required:
             invitations = list(MembershipInvitation.objects.filter(
                 content_type=content_type,
-                object_id=object_id).values_list("user_id", flat=True))
+                object_id=object_id).exclude(decline_invitation=True).values_list("user_id", flat=True))
         else:
             invitations = list(MembershipInvitation.objects.filter(
                 content_type=content_type,

@@ -29,6 +29,9 @@ class DateTimeBase(models.Model):
 class Role(DateTimeBase):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 
 
 class GenericMember(DateTimeBase):

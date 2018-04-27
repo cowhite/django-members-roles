@@ -21,6 +21,25 @@ $.ajax({
 });
 }
 
+var roleList = function(url){
+ if(!url){
+  url = "/django_roles/"+contentTypeId+"/"+objectId+"/role_list/";
+}
+$.ajax({
+  url: url,
+  type: "GET",
+  success: function(res){
+    console.log(res)
+    if(res.error) {
+      console.log(res.error);
+    }
+    else{
+      $("#role-list").html(res);
+    }
+  }
+});
+}
+
 $(function(){
   $(document).on("staff-opened", function(e, data) {
     if(data){
@@ -30,6 +49,16 @@ $(function(){
       staffList();
     }
     console.log("staff tab opened");
+  });
+
+  $(document).on("roles-opened", function(e, data) {
+    if(data){
+      roleList(data.url);
+    }
+    else{
+      roleList();
+    }
+    console.log("roles tab opened");
   });
 
   onLoad();

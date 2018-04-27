@@ -11,4 +11,6 @@ urlpatterns = [
         name="add-staff"),
     url(r'^staff_list/$', login_required(StaffListView.as_view()),
         name="staff-list"),
+    url(r'^add_role/$', login_required(AddRoleView.as_view()), name="add-role"),
+    url(r'^role_list/$', login_required(RoleListView.as_view()), name="role-list"),
 ]
