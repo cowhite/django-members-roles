@@ -10,7 +10,6 @@ $.ajax({
   url: url,
   type: "GET",
   success: function(res){
-    console.log(res)
     if(res.error) {
       console.log(res.error);
     }
@@ -29,7 +28,6 @@ $.ajax({
   url: url,
   type: "GET",
   success: function(res){
-    console.log(res)
     if(res.error) {
       console.log(res.error);
     }

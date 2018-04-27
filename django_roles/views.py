@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.contenttypes.models import ContentType
 from django.views import generic as generic_views
@@ -46,9 +46,20 @@ class AddStaffView(generic_views.FormView):
         return JsonResponse({"error": True, "html": html})
 
 
-class AddRoleView(generic_views.FormView):
+class CreatAndUpdateRoleView(generic_views.FormView):
     template_name = "django_roles/forms/add_role.html"
     form_class = RoleForm
+
+    def get_form(self, form_class=None):
+        try:
+            role_id = self.request.GET.get('role_id', None)
+            if role_id:
+                role = Role.objects.get(id=role_id)
+                return self.form_class(instance=role, **self.get_form_kwargs())
+            else:
+                return self.form_class(**self.get_form_kwargs())
+        except Role.DoesNotExist:
+            return self.form_class(**self.get_form_kwargs())
 
     def form_valid(self, form):
         content_type = ContentType.objects.get(
@@ -76,6 +87,20 @@ class RoleListView(generic_views.TemplateView):
             content_type=content_type, object_id=object_id)
         context['roles'] = roles
         return context
+
+
+class DeleteRoleView(generic_views.DeleteView):
+    model = Role
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(Role, id=self.kwargs['pk'])
+
+    def get_success_url(self, *args, **kwargs):
+        content_type_id = self.kwargs['content_type_id']
+        object_id = self.kwargs['object_id']
+        return reverse("role-list",
+                       kwargs={"content_type_id": content_type_id,
+                               "object_id": object_id})
 
 
 class StaffListView(generic_views.TemplateView):

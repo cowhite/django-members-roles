@@ -1,4 +1,3 @@
-console.log(99);
 function switchTab(tab) {
   console.log("Switching tab to "+tab);
   var url, $section;
@@ -76,6 +75,11 @@ var submitForm = function($this){
   var modal = $('.form-modal'), showFormBtnId, $showFormBtn, url,
   id, form, formContentId, modal, aftersuccess, type;
 
+  var datetimepicker_options = {
+    "format": "Y-m-d H:i",
+    "yearEnd": (new Date).getFullYear()
+  }
+
   if($this.hasClass("btn-submit-form")) {
     showFormBtnId = "#"+modal.find(".btn.btn-primary").data("btn-show-form-id");
     $showFormBtn = $(showFormBtnId);
@@ -94,16 +98,23 @@ var submitForm = function($this){
     url = $showFormBtn.data('url'),
     id = showFormBtnId,
     afterSuccess = $showFormBtn.data('aftersuccess'),
+    formDataPrepare = $showFormBtn.data('formdataprepare'),
     type = "POST";
   }else{
     url = $this.data('url'),
     id = $this.data('id'),
 
     afterSuccess = $this.data('aftersuccess'),
+    formDataPrepare = $this.data('formdataprepare'),
     type = "GET";
   }
 
-  var data = new FormData($(form)[0]);
+  if (!formDataPrepare){
+    var data = new FormData($(form)[0]);
+  }
+  else{
+    var data = eval(formDataPrepare)($(form)[0]);
+  }
 
   var width = $this.data("width");
   if (!width){ width = "150px"; }
@@ -131,6 +142,49 @@ var submitForm = function($this){
           modal.modal("show");
         }
       }
+      if($(document).datetimepicker){
+        if($(".date").length){
+          $(".date").datetimepicker({"timepicker": false, "format": "Y-m-d"});
+        }
+        if($(".date-time-picker").length){
+            $(".date-time-picker").datetimepicker(datetimepicker_options);
+        }
+      }
+      formContentId.find("select").each(function(){
+        if($(this).hasClass('autocomplete')) {
+          var url = $(this).data("url");
+
+          if($(this).select2){
+            // Apply select2 only if the library is available
+            var selectOptions = {
+              width: width,
+              dropdownParent: modal,
+              ajax: {
+                minimumInputLength: 3,
+                url: url,
+                dataType: 'json',
+                cache: true
+              }
+            }
+            if($(this).hasClass("allow_custom_input")){
+              selectOptions['tags'] = true
+            }
+            $(this).select2(selectOptions);
+          }
+        } else {
+          if($(this).select2){
+            // Apply select2 only if the library is available
+            $(this).select2({
+              "width": width,
+              "dropdownParent": modal,
+
+            });
+          }
+        }
+      });
+      if($(".form-modal .rich-text").summernote){
+        $(".form-modal .rich-text").summernote();
+      }
     }
   });
 }
@@ -155,23 +209,31 @@ $(function(){
     var $this = $(this),
     url = $this.data("url"),
     requestType = $this.data("request-type"),
+    aftersuccess = $this.data("aftersuccess"),
     data = {"csrfmiddlewaretoken": csrfmiddlewaretoken };
-
     if($this.hasClass("btn-action-delete")) {
       var confirmDelete = confirm("Are you sure want to delete ?");
       if(!confirmDelete) { return; }
     }
-
     if(!requestType) {
       requestType = "GET";
     }
-
-
     $.ajax({
       url: url,
+      data:data,
       type: requestType,
       success: function(res) {
-        $this.remove();
+        if(aftersuccess){
+          eval(aftersuccess)();
+        }else{
+          if($this.hasClass("btn-action-delete")) {
+            var parentClass = $this.data("parent-class").trim();
+            if(parentClass){
+              $this.closest(parentClass).remove();
+            }
+          }
+        }
+
       }
     });
   })
