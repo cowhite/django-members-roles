@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from django.contrib.auth.models import Permission
 
 from .tasks import send_invitations_task
 
@@ -25,6 +26,10 @@ class DateTimeBase(models.Model):
     class Meta:
         abstract = True
 
+class RolePermission(DateTimeBase):
+    content_type =models.ForeignKey(ContentType)
+    permissions = models.ManyToManyField(Permission)
+
 
 class Role(DateTimeBase):
     name = models.CharField(max_length=100)
@@ -32,6 +37,7 @@ class Role(DateTimeBase):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+    permissions = models.ManyToManyField(Permission)
 
 
 class GenericMember(DateTimeBase):
@@ -145,5 +151,11 @@ def send_invitations(self):
     self.invitations_sent = True
     self.save()
 
+def permission_str_method(self):
+    return "%s | %s" % (
+        self.content_type,
+        self.name)
 
 BulkInvitation.add_to_class('send_invitations', send_invitations)
+
+Permission.add_to_class('__str__', permission_str_method)

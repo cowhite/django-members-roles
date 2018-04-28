@@ -50,6 +50,11 @@ class CreatAndUpdateRoleView(generic_views.FormView):
     template_name = "django_roles/forms/add_role.html"
     form_class = RoleForm
 
+    def get_form_kwargs(self):
+        kwargs = super(CreatAndUpdateRoleView, self).get_form_kwargs()
+        kwargs['content_type_id'] = self.kwargs['content_type_id']
+        return kwargs
+
     def get_form(self, form_class=None):
         try:
             role_id = self.request.GET.get('role_id', None)
@@ -66,6 +71,7 @@ class CreatAndUpdateRoleView(generic_views.FormView):
             id=self.kwargs['content_type_id'])
         object_id = self.kwargs['object_id']
         instance = form.save(content_type=content_type, object_id=object_id)
+        form.save_m2m()
         return JsonResponse({"message": "success"})
 
     def form_invalid(self, form):
