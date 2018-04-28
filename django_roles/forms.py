@@ -19,6 +19,7 @@ class BulkInvitationForm(forms.ModelForm):
         instance.save()
         return instance
 
+
 class RoleForm(forms.ModelForm):
 
     class Meta:
@@ -31,10 +32,12 @@ class RoleForm(forms.ModelForm):
         try:
             role_permission = RolePermission.objects.get(
                 content_type_id=content_type_id).permissions
-            permissions_list = list(role_permission.values_list("id", flat=True))
+            permissions_list = list(
+                role_permission.values_list("id", flat=True))
         except RolePermission.DoesNotExist:
             permissions_list = []
-        self.fields['permissions'].queryset = self.fields['permissions'].queryset.filter(id__in=permissions_list)
+        self.fields['permissions'].queryset = self.fields[
+            'permissions'].queryset.filter(id__in=permissions_list)
 
     def save(self, content_type, object_id):
         instance = super(RoleForm, self).save(commit=False)

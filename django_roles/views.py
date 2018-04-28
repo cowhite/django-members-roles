@@ -126,16 +126,19 @@ class StaffListView(generic_views.TemplateView):
                 content_type=content_type,
                 object_id=object_id).exclude(
                 decline_invitation=True, user=None)
-            invitations_list = list(invitations.values_list("user_id", flat=True))
+            invitations_list = list(
+                invitations.values_list("user_id", flat=True))
         else:
             invitations = MembershipInvitation.objects.filter(
                 content_type=content_type,
                 object_id=object_id,
                 accepted_invitation=True)
-            invitations_list = list(invitations.values_list("user_id", flat=True))
+            invitations_list = list(
+                invitations.values_list("user_id", flat=True))
 
         users = User.objects.filter(id__in=invitations_list)
-        generic_members = GenericMember.objects.filter(user_id__in=invitations_list)
+        generic_members = GenericMember.objects.filter(
+            user_id__in=invitations_list)
         context['staff'] = generic_members
         context['roles'] = roles
         return context
@@ -184,12 +187,13 @@ class AcceptDeclineInvitationView(generic_views.View):
             elif accept_status == "False":
                 return redirect("%s?msg=You declined this invitation" % reverse('messages'))
             else:
-                return redirect("%s?msg=Somthing went wrong please contact admin" %reverse('messages'))
+                return redirect("%s?msg=Somthing went wrong please contact admin" % reverse('messages'))
 
 
 def message_view(request):
     msg = request.GET['msg']
     return render(request, 'django_roles/includes/invitation_response_message.html', {"msg": msg})
+
 
 class UpdateRoletoMemeber(generic_views.View):
 
@@ -201,13 +205,13 @@ class UpdateRoletoMemeber(generic_views.View):
         object_id = self.kwargs['object_id']
         if role_id:
             staff_memeber = get_object_or_404(GenericMember,
-             content_type=content_type, object_id=object_id, user_id=user_id)
+                                              content_type=content_type, object_id=object_id, user_id=user_id)
             if role_id == "null":
                 staff_memeber.role = None
             else:
                 role = get_object_or_404(Role, id=role_id)
-                staff_memeber.role=role
+                staff_memeber.role = role
             staff_memeber.save()
-            return JsonResponse({"message":"success"})
+            return JsonResponse({"message": "success"})
         else:
-            return JsonResponse({"error":True, "message":"required role id"})
+            return JsonResponse({"error": True, "message": "required role id"})

@@ -17,7 +17,7 @@ class OrganizationCreateView(FormView):
 
     def form_invalid(self, form):
         res = super(JobCreateView, self).form_invalid(form)
-        html = render_to_string(self.template_name,{"form":form})
+        html = render_to_string(self.template_name, {"form": form})
         return JsonResponse({"error": True, "html": html})
 
 

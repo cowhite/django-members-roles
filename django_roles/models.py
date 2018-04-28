@@ -26,8 +26,9 @@ class DateTimeBase(models.Model):
     class Meta:
         abstract = True
 
+
 class RolePermission(DateTimeBase):
-    content_type =models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType)
     permissions = models.ManyToManyField(Permission)
 
 
@@ -150,6 +151,7 @@ def send_invitations(self):
         invitation.save()
     self.invitations_sent = True
     self.save()
+
 
 def permission_str_method(self):
     return "%s | %s" % (
