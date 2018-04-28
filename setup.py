@@ -8,22 +8,22 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django-member-roles',
-    version='0.1',
+    name='django-members-roles',
+    version='0.1.dev1 ',
     packages=find_packages(),
     include_package_data=True,
-    license='Cowhite License',  # example license
-    description='A Django app to inivite members and adding roles to member.',
+    license='MIT License',  # example license
+    description='A Django app to invite members and add roles to member.',
     long_description=README,
-    url='https://www.cowhite.com/',
-    author='Cowhite',
+    url='https://github.com/cowhite/django-roles',
+    author='Cowhite Software Pvt Ltd',
     author_email='hello@cowhite.com',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.11',  # replace "X.Y" as appropriate
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: Cowhite License',  # example license
+        'License :: OSI Approved :: MIT License',  # example license
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         # Replace these appropriately if you are stuck on Python 2.
