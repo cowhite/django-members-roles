@@ -1,0 +1,6 @@
+include LICENSE
+include README.rst
+recursive-include django_roles/static *
+recursive-include django_roles/templates *
+recursive-include example/ *
+recursive-include docs *
