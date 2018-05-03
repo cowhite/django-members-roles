@@ -158,7 +158,7 @@ class AcceptDeclineInvitationView(generic_views.View):
                       {"uu_id": uu_id, "invitation": invitation})
 
     def post(self, request, *args, **kwargs):
-        uu_id = self.request.POST.get("uu_id", None)
+        uu_id = kwargs['uu_id']
         accept_status = self.request.POST.get("accept_status", None)
         user = self.request.user
         if uu_id:
@@ -188,6 +188,8 @@ class AcceptDeclineInvitationView(generic_views.View):
                 return redirect("%s?msg=You declined this invitation" % reverse('messages'))
             else:
                 return redirect("%s?msg=Somthing went wrong please contact admin" % reverse('messages'))
+        else:
+            return redirect("%s?msg=You don't have permission to accept this invitation" %reverse('messages'))
 
 
 def message_view(request):

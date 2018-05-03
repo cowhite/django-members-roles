@@ -12,7 +12,6 @@
     <p>You can accept or decline this invitation</p>
     <form method="post">
       {% csrf_token %}
-      <input type="text" class="hide" name="uu_id" value="{{ uu_id }}">
       <button class="btn btn-primary" name="accept_status" type="submit" value="True">Accept</button>
       <button class="btn btn-primary" name="accept_status" type="submit" value="False">Decline</button>
     </form>

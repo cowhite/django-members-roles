@@ -2,3 +2,6 @@ from django.conf import settings
 
 DJANGO_ROLES_CONFIRMATION_REQUIRED = getattr(
     settings, 'DJANGO_ROLES_CONFIRMATION_REQUIRED', True)
+
+DJANGO_ROLES_TEST_CASE_MODEL_NAME = "user"
+DJANGO_ROLES_TEST_CAES_APP_LABEL = "auth"
