@@ -75,8 +75,9 @@ class CreatAndUpdateRoleView(generic_views.FormView):
         return JsonResponse({"message": "success"})
 
     def form_invalid(self, form):
-        res = super(AddRoleView, self).form_invalid(form)
+        res = super(CreatAndUpdateRoleView, self).form_invalid(form)
         html = render_to_string(self.template_name, {"form": form})
+        print(html)
         return JsonResponse({"error": True, "html": html})
 
 
