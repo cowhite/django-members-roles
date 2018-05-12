@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
 from .views import *
+from .decorators import has_url_permission_decorator
 
 urlpatterns = [
     url(r'^$', login_required(ManageStaffFullView.as_view()),
