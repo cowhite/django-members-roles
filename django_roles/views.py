@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 
+
 from .models import *
 from .forms import *
 from . import app_settings
@@ -218,3 +219,13 @@ class UpdateRoletoMemeber(generic_views.View):
             return JsonResponse({"message": "success"})
         else:
             return JsonResponse({"error": True, "message": "required role id"})
+
+
+class UpdateProjectUrlsView(generic_views.View):
+    def post(self, request, *args, **kwargs):
+        ProjectUrl.update_urls()
+        return redirect(reverse("admin:django_roles_projecturl_changelist"))
+
+
+
+

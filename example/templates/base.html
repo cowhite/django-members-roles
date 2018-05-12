@@ -3,6 +3,8 @@
 <head>
   <title>{% block meta_title %}{% endblock %} | Cowhite Software</title>
   <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}mysite/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+  {% block css %}{% endblock%}
+
 </head>
 <body>
   {% include  "includes/navbar.html" %}

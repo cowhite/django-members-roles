@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Permission
+from django.conf.urls import RegexURLPattern, RegexURLResolver
+from django.core import urlresolvers
 
 from .tasks import send_invitations_task
 
@@ -95,6 +97,41 @@ class MembershipInvitation(DateTimeBase):
             site.domain, reverse("accept-decline-invitation", kwargs={"uu_id": self.code.hex})[1:])
 
         return membership_invitation_url
+
+
+class ProjectUrl(DateTimeBase):
+    pattern = models.TextField()
+    name = models.CharField(max_length=255, unique=True)
+
+    @classmethod
+    def update_urls(cls):
+        all_urls = []
+
+        def fetch_urls(urls):
+            for url in urls.url_patterns:
+                if isinstance(url, RegexURLResolver):
+                    fetch_urls(url)
+                elif isinstance(url, RegexURLPattern):
+                    all_urls.append(url)
+
+        fetch_urls(urlresolvers.get_resolver())
+
+        for url in all_urls:
+            name = url.name
+            if not name:
+                continue
+            pattern = url.regex.pattern
+            try:
+                obj = ProjectUrl.objects.get(name=name)
+                obj.pattern = pattern
+                obj.save()
+            except ProjectUrl.DoesNotExist:
+                ProjectUrl.objects.create(name=name, pattern=pattern)
+
+
+class UrlPermission(DateTimeBase):
+    url = models.ForeignKey(ProjectUrl)
+    permissions = models.ManyToManyField(Permission)
 
 
 @receiver(post_save, sender=BulkInvitation, dispatch_uid="create_invitation")

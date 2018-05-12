@@ -23,6 +23,9 @@ from app1.views import *
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
+    # Allauth
+    url(r'^accounts/', include('allauth.urls')),
+
     # Mount django_roles
     url(r'^django_roles/', include('django_roles.urls')),
     url(r'^organizations/$', login_required(OrganizationFullView.as_view()),
@@ -30,5 +33,5 @@ urlpatterns = [
     url(r'^new_organization/$', login_required(OrganizationCreateView.as_view()),
         name="new-organization"),
     url(r'^organizations_list/$', login_required(OrganizationsListView.as_view()),
-        name="organizations-list")
+        name="organizations-list"),
 ]
