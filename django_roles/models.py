@@ -103,6 +103,9 @@ class ProjectUrl(DateTimeBase):
     pattern = models.TextField()
     name = models.CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return u"%s | %s" % (self.name, self.pattern)
+
     @classmethod
     def update_urls(cls):
         all_urls = []
@@ -129,7 +132,7 @@ class ProjectUrl(DateTimeBase):
                 ProjectUrl.objects.create(name=name, pattern=pattern)
 
 
-class UrlPermission(DateTimeBase):
+class UrlPermissionRequired(DateTimeBase):
     url = models.ForeignKey(ProjectUrl)
     permissions = models.ManyToManyField(Permission)
 
