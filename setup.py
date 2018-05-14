@@ -9,16 +9,17 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-members-roles',
-    version='0.1.dev2 ',
+    version='0.1',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',  # example license
     description='A Django app to invite members and add roles to member.',
     long_description=README,
-    url='https://github.com/cowhite/django-roles',
+    url='https://github.com/cowhite/django-members-roles',
     author='Cowhite Software Pvt Ltd',
     author_email='hello@cowhite.com',
-    install_requires=['django >= 1.11,<2'],
+    python_requires=">=2.7,<=3.6",
+    install_requires=["django >= 1.11, < 1.12"],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -28,6 +29,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         # Replace these appropriately if you are stuck on Python 2.
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
