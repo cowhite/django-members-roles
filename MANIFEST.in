@@ -1,6 +1,5 @@
 include LICENSE
 include README.rst
-recursive-include django_roles/static *
-recursive-include django_roles/templates *
-recursive-include example/ *
+recursive-include django_members_roles/static *
+recursive-include django_members_roles/templates *
 recursive-include docs *
