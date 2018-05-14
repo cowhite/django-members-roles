@@ -1,9 +1,11 @@
 language: python
 python:
+  - "2.7"
   - "3.5"
 # Install dependencies
 install:
-    - "pip install -r example/requirements.txt"
+    - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip install -r example/requirements2.7.txt; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then pip install -r example/requirements.txt; fi
     - "pip install coverage coveralls"
 
 script: coverage run example/manage.py test django_members_roles
