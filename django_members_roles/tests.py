@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
 
-from django_roles.models import (GenericMember, BulkInvitation,\
+from django_members_roles.models import (GenericMember, BulkInvitation,\
  Role, RolePermission, MembershipInvitation)
 from . import app_settings
 
@@ -22,8 +22,8 @@ class GenericMemberTestCase(TestCase):
         self.user2.is_superuser= True
         self.user2.save()
 
-        self.content_obj = ContentType.objects.get(model= app_settings.DJANGO_ROLES_TEST_CASE_MODEL_NAME,
-            app_label= app_settings.DJANGO_ROLES_TEST_CAES_APP_LABEL)
+        self.content_obj = ContentType.objects.get(model= app_settings.DJANGO_MEMBERS_ROLES_TEST_CASE_MODEL_NAME,
+            app_label= app_settings.DJANGO_MEMBERS_ROLES_TEST_CAES_APP_LABEL)
 
         permissions = Permission.objects.filter(content_type=self.content_obj)
         self.role_permission_obj = RolePermission.objects.create(content_type=self.content_obj)
