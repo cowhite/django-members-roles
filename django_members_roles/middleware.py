@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.urls import resolve
 from django.conf import settings
-from django_roles import app_settings
+from . import app_settings
 from django.contrib.contenttypes.models import ContentType
 
 

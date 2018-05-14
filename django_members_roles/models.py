@@ -15,7 +15,7 @@ from django.contrib.auth.models import Permission
 from django.conf.urls import RegexURLPattern, RegexURLResolver
 from django.core import urlresolvers
 from django.urls import resolve
-from django_roles import app_settings
+from . import app_settings
 
 from .tasks import send_invitations_task
 
@@ -181,10 +181,10 @@ def send_invitations(self):
         invitation_url = invitation.get_invitation_url()
         invited_by = self.invited_by
         subject = render_to_string(
-            "django_roles/mails/membership_invitation_subject.html",
+            "django_members_roles/mails/membership_invitation_subject.html",
             {"invited_by": invited_by.username, "invitation": invitation})
         body = render_to_string(
-            "django_roles/mails/membership_invitation.html",
+            "django_members_roles/mails/membership_invitation.html",
             {"invited_by": invited_by, "invitation_url": invitation_url, "invitation": invitation})
         send_mail(
             subject, '', settings.DEFAULT_FROM_EMAIL, [email],
@@ -209,8 +209,8 @@ def has_url_permission(request):
             url_permission_required_obj = UrlPermissionRequired.objects.get(url=project_url_obj)
 
             if url_permission_required_obj.permissions.count() > 0:
-                content_type_id_query = app_settings.DJANGO_ROLES_QUERY_PARAM_CONTENT_TYPE_ID
-                object_id_query = app_settings.DJANGO_ROLES_QUERY_PARAM_OBJECT_ID
+                content_type_id_query = app_settings.DJANGO_MEMBERS_ROLES_QUERY_PARAM_CONTENT_TYPE_ID
+                object_id_query = app_settings.DJANGO_MEMBERS_ROLES_QUERY_PARAM_OBJECT_ID
 
                 content_type_id = request.GET.get(content_type_id_query, None)
                 object_id = request.GET.get(object_id_query, None)

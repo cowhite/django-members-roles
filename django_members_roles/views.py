@@ -16,7 +16,7 @@ from . import app_settings
 
 
 class ManageStaffFullView(generic_views.TemplateView):
-    template_name = "django_roles/full_view.html"
+    template_name = "django_members_roles/full_view.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super(ManageStaffFullView,
@@ -29,7 +29,7 @@ class ManageStaffFullView(generic_views.TemplateView):
 
 
 class AddStaffView(generic_views.FormView):
-    template_name = "django_roles/forms/add_members.html"
+    template_name = "django_members_roles/forms/add_members.html"
     form_class = BulkInvitationForm
 
     def form_valid(self, form):
@@ -48,7 +48,7 @@ class AddStaffView(generic_views.FormView):
 
 
 class CreatAndUpdateRoleView(generic_views.FormView):
-    template_name = "django_roles/forms/add_role.html"
+    template_name = "django_members_roles/forms/add_role.html"
     form_class = RoleForm
 
     def get_form_kwargs(self):
@@ -83,7 +83,7 @@ class CreatAndUpdateRoleView(generic_views.FormView):
 
 
 class RoleListView(generic_views.TemplateView):
-    template_name = "django_roles/list/roles.html"
+    template_name = "django_members_roles/list/roles.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super(RoleListView,
@@ -112,7 +112,7 @@ class DeleteRoleView(generic_views.DeleteView):
 
 
 class StaffListView(generic_views.TemplateView):
-    template_name = "django_roles/list/staff_members.html"
+    template_name = "django_members_roles/list/staff_members.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super(StaffListView,
@@ -120,7 +120,7 @@ class StaffListView(generic_views.TemplateView):
         content_type = ContentType.objects.get(
             id=self.kwargs['content_type_id'])
         object_id = self.kwargs['object_id']
-        confirmation_required = app_settings.DJANGO_ROLES_CONFIRMATION_REQUIRED
+        confirmation_required = app_settings.DJANGO_MEMBERS_ROLES_CONFIRMATION_REQUIRED
         roles = Role.objects.filter(
             content_type=content_type, object_id=object_id)
         if not confirmation_required:
@@ -156,7 +156,7 @@ class AcceptDeclineInvitationView(generic_views.View):
                 code=uu_id, email=self.request.user.email)
         except MembershipInvitation.DoesNotExist:
             return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('messages'))
-        return render(request, "django_roles/includes/accept_decline_invitation.html",
+        return render(request, "django_members_roles/includes/accept_decline_invitation.html",
                       {"uu_id": uu_id, "invitation": invitation})
 
     def post(self, request, *args, **kwargs):
@@ -196,7 +196,7 @@ class AcceptDeclineInvitationView(generic_views.View):
 
 def message_view(request):
     msg = request.GET['msg']
-    return render(request, 'django_roles/includes/invitation_response_message.html', {"msg": msg})
+    return render(request, 'django_members_roles/includes/invitation_response_message.html', {"msg": msg})
 
 
 class UpdateRoletoMemeber(generic_views.View):
@@ -224,7 +224,7 @@ class UpdateRoletoMemeber(generic_views.View):
 class UpdateProjectUrlsView(generic_views.View):
     def post(self, request, *args, **kwargs):
         ProjectUrl.update_urls()
-        return redirect(reverse("admin:django_roles_projecturl_changelist"))
+        return redirect(reverse("admin:django_members_roles_projecturl_changelist"))
 
 
 

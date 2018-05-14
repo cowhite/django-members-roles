@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
-from django_roles.models import DateTimeBase
+from django_members_roles.models import DateTimeBase
 
 
 class Organization(DateTimeBase):

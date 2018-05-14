@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     # custom apps
-    'django_roles',
+    'django_members_roles',
     'app1',
 ]
 
@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_roles.middleware.UrlPermissionMiddleware',
+    'django_members_roles.middleware.UrlPermissionMiddleware',
 ]
 
 ROOT_URLCONF = 'example.urls'
@@ -134,7 +134,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "staticfiles"),
 )
 
-DJANGO_ROLES_CONFIRMATION_REQUIRED = True
+DJANGO_MEMBERS_ROLES_CONFIRMATION_REQUIRED = True
 CELERY_BROKER_URL = 'redis://localhost:6379/1'
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
