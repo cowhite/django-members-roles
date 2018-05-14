@@ -18,6 +18,7 @@ setup(
     url='https://github.com/cowhite/django-roles',
     author='Cowhite Software Pvt Ltd',
     author_email='hello@cowhite.com',
+    install_requires=['Django >= 1.11,<2'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

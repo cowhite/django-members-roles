@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.5"
+# Install dependencies
+install:
+    - "pip install -r example/requirements.txt"
+    - "pip install coverage coveralls"
+
+script: coverage run example/manage.py test django_members_roles
+
+after_success: coveralls
