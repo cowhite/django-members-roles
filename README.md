@@ -1,1 +1,1 @@
-# django-roles
+# django-members-roles
