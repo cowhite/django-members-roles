@@ -146,6 +146,9 @@ def create_invitation(sender, instance, **kwargs):
             app_settings.DJANGO_MEMBERS_ROLES_INVITATION_METHOD == "celery":
             # Use cron to run the task as management command if DJANGO_MEMBERS_ROLES_INVITATION_METHOD is not celery
             send_invitations_task.delay(instance.id)
+        elif instance.id and not instance.invitations_sent and \
+            app_settings.DJANGO_MEMBERS_ROLES_INVITATION_METHOD == "direct":
+            send_invitations_task(instance.id)
 
 
 def send_invitations(self):

@@ -140,7 +140,8 @@ class StaffListView(generic_views.TemplateView):
 
         users = User.objects.filter(id__in=invitations_list)
         generic_members = GenericMember.objects.filter(
-            user_id__in=invitations_list)
+            user_id__in=invitations_list, content_type=content_type,
+            object_id = object_id)
         context['staff'] = generic_members
         context['roles'] = roles
         return context
