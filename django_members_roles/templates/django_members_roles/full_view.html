@@ -1,4 +1,4 @@
-{% extends 'django_roles/base.html' %}
+{% extends 'django_members_roles/base.html' %}
 
 {% block content %}
 <div id='manage-staff' data-content_type_id="{{ content_type_id }}" data-object_id="{{ object_id }}">
@@ -9,8 +9,8 @@
   <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-role" data-url="{% url 'create-and-update-role' content_type_id object_id %}" data-aftersuccess="roleList" >Add Role</a>
   <a href="#roles" class='btn btn-primary change-tab' data-data='{"url":"{% url "role-list" content_type_id object_id %}"}' data-tab="staff">Role List</a>
 
-  {% include "django_roles/sections/staff.html" %}
-  {% include "django_roles/sections/roles.html" %}
+  {% include "django_members_roles/sections/staff.html" %}
+  {% include "django_members_roles/sections/roles.html" %}
 
 </div>
 
@@ -25,5 +25,5 @@
   var defaultTab = "staff";
 </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}django_roles/js/django_roles.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}django_members_roles/js/django_members_roles.js"></script>
 {% endblock %}

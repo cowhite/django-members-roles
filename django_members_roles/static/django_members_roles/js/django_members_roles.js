@@ -4,7 +4,7 @@ var $manageStaff = $("#manage-staff"),
 
 var staffList = function(url){
  if(!url){
-  url = "/django_roles/"+contentTypeId+"/"+objectId+"/staff_list/";
+  url = "/django_members_roles/"+contentTypeId+"/"+objectId+"/staff_list/";
 }
 $.ajax({
   url: url,
@@ -22,7 +22,7 @@ $.ajax({
 
 var roleList = function(url){
  if(!url){
-  url = "/django_roles/"+contentTypeId+"/"+objectId+"/role_list/";
+  url = "/django_members_roles/"+contentTypeId+"/"+objectId+"/role_list/";
 }
 $.ajax({
   url: url,

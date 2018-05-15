@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block meta_title %}{% endblock %} | Cowhite Software</title>
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}django_members_roles/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+  {% block css %}{% endblock%}
+
+</head>
+<body>
+  <div class='container'>
+  {% block content %}
+
+  {% endblock %}
+  </div>
+  {% include  "django_members_roles/includes/form_modal.html" %}
+
+  <footer class='footer'>
+
+  </footer>
+  <script type="text/javascript">
+    var csrfmiddlewaretoken = "{{ csrf_token }}";
+  </script>
+  <script type="text/javascript" src="{{ STATIC_URL }}django_members_roles/lib/js/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}django_members_roles/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}django_members_roles/lib/js/cowhite.js"></script>
+  {% block js %}{% endblock%}
+
+</body>
+</html>

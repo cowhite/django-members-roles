@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block main %}
 
   <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-organization" data-url="{% url 'new-organization' %}" data-aftersuccess="organizationsList" >Add Organization</a>
   <a href="#organizations" class='btn btn-primary change-tab' data-tab="organizations">Organizations</a>
@@ -8,7 +8,7 @@
   {% include "app1/organizations/sections/organizations.html" %}
 
 {% endblock %}
-{% block js %}
+{% block scripts %}
   <script type="text/javascript">
     var defaultTab = "organizations";
   </script>

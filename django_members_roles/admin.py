@@ -14,7 +14,7 @@ class ProjectUrlAdmin(admin.ModelAdmin):
 
         js = (
             'https://code.jquery.com/jquery-3.3.1.min.js',
-            os.path.join(settings.STATIC_URL, "django_roles/js/project_url_actions.js"))
+            os.path.join(settings.STATIC_URL, "django_members_roles/js/project_url_actions.js"))
 
 
 class Select2InAdmin(object):
@@ -25,7 +25,7 @@ class Select2InAdmin(object):
         js = (
             'https://code.jquery.com/jquery-3.3.1.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js',
-            os.path.join(settings.STATIC_URL, "django_roles/js/url_permission_required.js"),
+            os.path.join(settings.STATIC_URL, "django_members_roles/js/url_permission_required.js"),
         )
 
 class UrlPermissionRequiredAdmin(admin.ModelAdmin, Select2InAdmin):
