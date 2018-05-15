@@ -8,6 +8,6 @@ install:
     - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then pip install -r example/requirements.txt; fi
     - "pip install coverage coveralls"
 
-script: coverage run example/manage.py test django_members_roles --settings=example.test_settings
+script: coverage run --source='.' example/manage.py test django_members_roles --settings=example.test_settings
 
 after_success: coveralls
