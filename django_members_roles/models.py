@@ -142,7 +142,9 @@ class UrlPermissionRequired(DateTimeBase):
 @receiver(post_save, sender=BulkInvitation, dispatch_uid="create_invitation")
 def create_invitation(sender, instance, **kwargs):
     if kwargs['created']:
-        if instance.id and not instance.invitations_sent and settings.INVITATION_METHOD == "celery":
+        if instance.id and not instance.invitations_sent and \
+            app_settings.DJANGO_MEMBERS_ROLES_INVITATION_METHOD == "celery":
+            # Use cron to run the task as management command if DJANGO_MEMBERS_ROLES_INVITATION_METHOD is not celery
             send_invitations_task.delay(instance.id)
 
 

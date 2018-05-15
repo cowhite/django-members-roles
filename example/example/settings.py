@@ -139,7 +139,7 @@ CELERY_BROKER_URL = 'redis://localhost:6379/1'
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = "hello@cowhite.com"
-INVITATION_METHOD = "celery"
+DJANGO_MEMBERS_ROLES_INVITATION_METHOD = "celery"
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
