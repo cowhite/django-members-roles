@@ -245,17 +245,50 @@ def has_url_permission(request):
                 except GenericMember.DoesNotExist:
                     return False
 
-                current_user_permissions = generic_member.role.permissions.all()
+                try:
+                    admin_role = Role.objects.get(
+                        name="admin", content_type_id=content_type_id,
+                        object_id= object_id)
+                    if admin_role in generic_member.role.permissions.all():
+                        return True
+                except Role.DoesNotExist:
+                    pass
+                if generic_member.role:
+                    current_user_permissions = generic_member.role.permissions.all()
 
-                for required_permission in url_permission_required_obj.permissions.all():
-                    if required_permission not in current_user_permissions:
-                        return False
+                    for required_permission in url_permission_required_obj.permissions.all():
+                        if required_permission not in current_user_permissions:
+                            return False
+                else:
+                    return False
 
         except UrlPermissionRequired.DoesNotExist:
             pass
     except ProjectUrl.DoesNotExist:
         pass
     return True
+
+def create_admin_role(user, content_type, object_id):
+    try:
+        generic_member = GenericMember.objects.get(
+            user=user, content_type= content_type, object_id= object_id)
+    except GenericMember.DoesNotExist:
+        generic_member = GenericMember.objects.create(
+            user= user, content_type= content_type, object_id= object_id,
+            )
+    try:
+        role = Role.objects.get(
+            content_type= content_type, object_id=object_id,
+            name= "admin")
+    except Role.DoesNotExist:
+        role = Role.objects.create(
+            content_type= content_type, object_id= object_id,
+            name = "admin"
+        )
+
+    generic_member.role = role
+    generic_member.save()
+
 
 BulkInvitation.add_to_class('send_invitations', send_invitations)
 

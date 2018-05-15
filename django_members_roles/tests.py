@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
 
 from django_members_roles.models import (GenericMember, BulkInvitation,\
- Role, RolePermission, MembershipInvitation)
+ Role, RolePermission, MembershipInvitation, UrlPermissionRequired, ProjectUrl)
 from . import app_settings
 
 import time
@@ -17,7 +17,7 @@ class Common(TestCase):
         self.user1 = User.objects.create_user(
             username= "user1", password= "a",
             email= "user1@example.com")
-        self.user1.is_superuser= True
+        self.user1.is_staff= True
         self.user1.save()
 
         self.user2 = User.objects.create_user(
@@ -29,13 +29,13 @@ class Common(TestCase):
         self.group1 = Group.objects.create(name="group1")
         self.group2 = Group.objects.create(name="group2")
 
-        self.content_obj = ContentType.objects.get(
+        self.content_type_obj = ContentType.objects.get(
             model= app_settings.DJANGO_MEMBERS_ROLES_TEST_CASE_MODEL_NAME,
             app_label= app_settings.DJANGO_MEMBERS_ROLES_TEST_CASE_APP_LABEL)
 
-        permissions = Permission.objects.filter(content_type=self.content_obj)
+        permissions = Permission.objects.filter(content_type=self.content_type_obj)
         self.role_permission_obj = RolePermission.objects.create(
-            content_type=self.content_obj)
+            content_type=self.content_type_obj)
         for permission in permissions:
             self.role_permission_obj.permissions.add(permission.id)
 
@@ -45,10 +45,10 @@ class GenericMemberTestCase(Common):
         self.client.login(username=self.user1, password="a")
         emails = "user4@example.com,user5@example.com,user6@example.com"
         res = self.client.post(reverse("add-staff",
-            kwargs={"content_type_id":self.content_obj.id,\
+            kwargs={"content_type_id":self.content_type_obj.id,\
             "object_id":self.group1.id}),{"emails": emails})
         invitations = MembershipInvitation.objects.filter(
-            invitation_sent=True, content_type_id=self.content_obj.id,\
+            invitation_sent=True, content_type_id=self.content_type_obj.id,\
              object_id=self.group1.id)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(invitations.count(), len(emails.split(",")))
@@ -57,7 +57,7 @@ class GenericMemberTestCase(Common):
         invitation_obj = MembershipInvitation.objects.create(
             email= "user2@example.com",
             user= self.user2, invited_by= self.user1,
-            content_type_id= self.content_obj.id,
+            content_type_id= self.content_type_obj.id,
             object_id= self.group1.id)
         uu_id = invitation_obj.code.hex
         self.client.login(username= self.user2.username, password="a")
@@ -73,7 +73,7 @@ class GenericMemberTestCase(Common):
         invitation_obj = MembershipInvitation.objects.create(
             email= "user1@example.com",
             user= self.user1, invited_by= self.user2,
-            content_type_id= self.content_obj.id,
+            content_type_id= self.content_type_obj.id,
             object_id= self.group1.id)
         uu_id = invitation_obj.code.hex
         self.client.login(username= self.user1.username, password= "a")
@@ -89,7 +89,7 @@ class GenericMemberTestCase(Common):
         invitation_obj = MembershipInvitation.objects.create(
             email= "user1@example.com",
             user= self.user1, invited_by= self.user2,
-            content_type_id= self.content_obj.id,
+            content_type_id= self.content_type_obj.id,
             object_id= self.group2.id)
         uu_id = invitation_obj.code.hex
         self.client.login(username= self.user2.username,password="a")
@@ -105,7 +105,7 @@ class GenericMemberTestCase(Common):
         invitation_obj = MembershipInvitation.objects.create(
             email= "user3@example.com",
             invited_by= self.user1,
-            content_type_id= self.content_obj.id,
+            content_type_id= self.content_type_obj.id,
             object_id= self.group1.id)
         uu_id = invitation_obj.code.hex
         user3 = User.objects.create_user(username="user3",
@@ -114,7 +114,7 @@ class GenericMemberTestCase(Common):
         user3.save()
         """ creating generic member for user """
         generic_obj = GenericMember.objects.create(
-            content_type_id=self.content_obj.id, object_id=self.group1.id,
+            content_type_id=self.content_type_obj.id, object_id=self.group1.id,
             user = user3)
         self.client.login(username= user3.username, password="a")
         res = self.client.post(reverse("accept-decline-invitation",\
@@ -124,17 +124,17 @@ class GenericMemberTestCase(Common):
         self.assertEqual(invitation_obj.email, invitation.email)
         self.assertEqual(invitation.accepted_invitation, True)
         res = self.client.get(reverse("staff-list", \
-            kwargs= {"content_type_id": self.content_obj.id,
+            kwargs= {"content_type_id": self.content_type_obj.id,
             "object_id": self.group1.id}))
         generic_obj = GenericMember.objects.create(
-            content_type_id=self.content_obj.id, object_id=self.group1.id,
+            content_type_id=self.content_type_obj.id, object_id=self.group1.id,
             user = self.user2)
         members_accepted_list = list(MembershipInvitation.objects.filter(
-                content_type_id=self.content_obj.id, object_id=self.group1.id,
+                content_type_id=self.content_type_obj.id, object_id=self.group1.id,
                 accepted_invitation=True
             ).values_list("user_id", flat=True))
         members= GenericMember.objects.filter(
-            content_type_id=self.content_obj.id, object_id=self.group1.id,
+            content_type_id=self.content_type_obj.id, object_id=self.group1.id,
             user_id__in=members_accepted_list)
         self.assertEqual(members.count(),res.context['staff'].count())
         self.assertEqual(list(members.values_list("user_id", flat=True)),\
@@ -153,7 +153,7 @@ class RolesTestCases(Common):
                     "id", flat=True))
         }
         res = self.client.post(reverse('create-and-update-role',\
-         kwargs= {'content_type_id':self.content_obj.id,
+         kwargs= {'content_type_id':self.content_type_obj.id,
          'object_id': self.group1.id}), data)
         role_obj = Role.objects.latest('id')
         self.assertEqual(role_obj.name, data['name'])
@@ -168,13 +168,13 @@ class RolesTestCases(Common):
                     "id", flat=True))
         }
         res = self.client.post(reverse('create-and-update-role',\
-         kwargs= {'content_type_id':self.content_obj.id,
+         kwargs= {'content_type_id':self.content_type_obj.id,
          'object_id': self.group1.id}), data)
         role_obj = Role.objects.latest('id')
         data2 = data
         data2['name'] = "role"
         res = self.client.post("%s?role_id=%s" %(reverse('create-and-update-role',\
-         kwargs= {'content_type_id': self.content_obj.id,
+         kwargs= {'content_type_id': self.content_type_obj.id,
          'object_id': self.group1.id}), role_obj.id), data2)
         role_obj = Role.objects.get(id= role_obj.id)
         self.assertEqual(role_obj.name, data2['name'])
@@ -189,11 +189,64 @@ class RolesTestCases(Common):
                     "id", flat=True))
         }
         res = self.client.post(reverse('create-and-update-role',\
-         kwargs= {'content_type_id':self.content_obj.id,
+         kwargs= {'content_type_id':self.content_type_obj.id,
          'object_id': self.group1.id}), data)
         role_obj = Role.objects.latest('id')
         res = self.client.post(reverse('delete-role',\
-         kwargs= {'content_type_id': self.content_obj.id,
+         kwargs= {'content_type_id': self.content_type_obj.id,
          'object_id': self.group1.id, 'pk': role_obj.id}), data)
         self.assertEqual(res.status_code, 302)
         self.assertEqual(Role.objects.filter(id=role_obj.id).count(), 0)
+
+
+class GenericMemberRoleTestCase(Common):
+
+    def test_add_permission_role_to_url(self):
+        self.client.login(username=self.user1.username, password="a")
+        project_urls_old_obj_count = ProjectUrl.objects.all().count()
+        res = self.client.post(reverse("update-project-urls"))
+        project_urls_obj = ProjectUrl.objects.all()
+        self.assertNotEqual(project_urls_old_obj_count, project_urls_obj.count())
+        add_staff_url = project_urls_obj.get(name="add-staff")
+        self.assertEqual(add_staff_url.name, "add-staff")
+        genericmember_content = ContentType.objects.get(
+            app_label='django_members_roles', model='genericmember')
+        permission = Permission.objects.get(
+            content_type= genericmember_content, codename="add_genericmember")
+        url_permission_obj = UrlPermissionRequired.objects.create(
+            url = add_staff_url
+            )
+        url_permission_obj.permissions.add(permission)
+        url_permission_obj.save()
+
+        role = Role.objects.create(name="add_staff",
+            content_type=self.content_type_obj, object_id= self.group1.id
+            )
+        role.permissions.add(permission.id)
+        role.save()
+        generic_member = GenericMember.objects.create(
+            user= self.user1, content_type= self.content_type_obj,
+            object_id = self.group1.id
+            )
+
+        url = "%s?%s=%s&%s=%s" % (
+            reverse("add-staff",
+            kwargs={"content_type_id":self.content_type_obj.id,\
+            "object_id":self.group1.id}),
+            app_settings.DJANGO_MEMBERS_ROLES_QUERY_PARAM_CONTENT_TYPE_ID,
+            self.content_type_obj.id,
+            app_settings.DJANGO_MEMBERS_ROLES_QUERY_PARAM_OBJECT_ID,
+            self.group1.id)
+
+        emails = "user6@example.com,user7@example.com"
+        res = self.client.post(url, {"emails": emails})
+
+        self.assertEqual(res.status_code, 403)
+
+        generic_member.role = role
+        generic_member.save()
+
+        res = self.client.post(url, {"emails": emails})
+
+        self.assertEqual(res.status_code, 200)
+
