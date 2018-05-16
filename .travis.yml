@@ -1,10 +1,13 @@
 language: python
 python:
   - "2.7"
+  - "3.4"
   - "3.5"
+
 # Install dependencies
 install:
     - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip install -r example/requirements2.7.txt; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == 3.4 ]]; then pip install -r example/requirements.txt; fi
     - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then pip install -r example/requirements.txt; fi
     - "pip install coverage coveralls"
 

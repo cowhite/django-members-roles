@@ -2,6 +2,7 @@
 __pycache__
 *.sqlite3
 build
+_build
 dist
 *.egg-info
 .coverage
