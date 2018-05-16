@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=Cowhitejs
+set SPHINXPROJ=Django-members-roles
 
 if "%1" == "" goto help
 
