@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'Cowhite.js'
+project = u'Django-members-roles'
 copyright = u'2018, Cowhite Software Pvt Ltd'
 author = u'Cowhite Software Pvt Ltd'
 
@@ -102,7 +102,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Cowhitejsdoc'
+htmlhelp_basename = 'Django-members-rolesdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -129,7 +129,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Cowhitejs.tex', u'Cowhite.js Documentation',
+    (master_doc, 'Django-members-roles.tex', u'Django-members-roles Documentation',
      u'Cowhite Software Pvt Ltd', 'manual'),
 ]
 
@@ -139,7 +139,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'cowhitejs', u'Cowhite.js Documentation',
+    (master_doc, 'Django-members-roles', u'Django-members-roles Documentation',
      [author], 1)
 ]
 
@@ -150,7 +150,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Cowhitejs', u'Cowhite.js Documentation',
-     author, 'Cowhitejs', 'One line description of project.',
+    (master_doc, 'Django-members-roles', u'Django-members-roles Documentation',
+     author, 'Django-members-roles', 'One line description of project.',
      'Miscellaneous'),
 ]
