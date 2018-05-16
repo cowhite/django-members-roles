@@ -10,6 +10,7 @@ from django_members_roles.models import (GenericMember, BulkInvitation,\
 from . import app_settings
 
 import time
+import uuid
 
 class Common(TestCase):
 
@@ -39,6 +40,17 @@ class Common(TestCase):
         for permission in permissions:
             self.role_permission_obj.permissions.add(permission.id)
 
+class GenericMemberFullViewTestCase(Common):
+
+    def test_staff_full_view(self):
+        self.client.login(username= self.user1, password= "a")
+        res = self.client.get(reverse("manage-staff",
+            kwargs={"content_type_id":self.content_type_obj.id,\
+            "object_id":self.group1.id}))
+        self.assertEqual(res.context['object_id'], str(self.group1.id))
+        self.assertEqual(res.context['content_type_id'], str(self.content_type_obj.id))
+
+
 class GenericMemberTestCase(Common):
 
     def test_sending_invitation(self):
@@ -61,13 +73,37 @@ class GenericMemberTestCase(Common):
             object_id= self.group1.id)
         uu_id = invitation_obj.code.hex
         self.client.login(username= self.user2.username, password="a")
-        self.client.post(reverse("accept-decline-invitation",\
+        res = self.client.post(reverse("accept-decline-invitation",\
          kwargs= {"uu_id": uu_id}), {"accept_status": "True"})
         invitation = MembershipInvitation.objects.latest('id')
         self.assertEqual(invitation_obj.email, invitation.email)
         self.assertEqual(invitation.accepted_invitation, True)
         self.assertEqual(invitation.decline_invitation, None)
 
+    def test_wrong_code_for_accept_invitation(self):
+        invitation_obj = MembershipInvitation.objects.create(
+            email= "user2@example.com",
+            user= self.user2, invited_by= self.user1,
+            content_type_id= self.content_type_obj.id,
+            object_id= self.group1.id)
+        code = uuid.uuid1()
+        self.client.login(username= self.user2.username, password="a")
+        res = self.client.get(reverse("accept-decline-invitation",\
+         kwargs= {"uu_id": code.hex }), {"accept_status": "True"})
+
+        self.assertEqual(res.status_code, 302)
+
+    def test_correct_code_for_accept_invitation(self):
+        invitation_obj = MembershipInvitation.objects.create(
+            email= "user2@example.com",
+            user= self.user2, invited_by= self.user1,
+            content_type_id= self.content_type_obj.id,
+            object_id= self.group1.id)
+        code = invitation_obj.code.hex
+        self.client.login(username= self.user2.username, password="a")
+        res = self.client.get(reverse("accept-decline-invitation",\
+         kwargs= {"uu_id": code }), {"accept_status": "True"})
+        self.assertEqual(res.status_code, 200)
 
     def test_decline_invitation(self):
         invitation_obj = MembershipInvitation.objects.create(
@@ -198,6 +234,25 @@ class RolesTestCases(Common):
         self.assertEqual(res.status_code, 302)
         self.assertEqual(Role.objects.filter(id=role_obj.id).count(), 0)
 
+    def test_role_list(self):
+        self.client.login(username= self.user1.username, password= "a")
+        data = {
+            "name" : "role1",
+            "description": "first role",
+            "permissions": list(
+                self.role_permission_obj.permissions.all().values_list(
+                    "id", flat=True))
+        }
+        res = self.client.post(reverse('create-and-update-role',\
+         kwargs= {'content_type_id':self.content_type_obj.id,
+         'object_id': self.group1.id}), data)
+        roles = Role.objects.all()
+        res = self.client.get(reverse("role-list",
+            kwargs={'content_type_id': self.content_type_obj.id,
+         'object_id': self.group1.id}))
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.context['roles'].count(), roles.count())
+
 
 class GenericMemberRoleTestCase(Common):
 
@@ -250,3 +305,43 @@ class GenericMemberRoleTestCase(Common):
 
         self.assertEqual(res.status_code, 200)
 
+    def test_update_role_to_generic_member(self):
+        self.client.login(username= self.user1.username, password= "a")
+        role1 = Role.objects.create(name="role1",
+            content_type=self.content_type_obj, object_id= self.group1.id)
+        role2 = Role.objects.create(name="role1",
+            content_type=self.content_type_obj, object_id= self.group1.id)
+
+        generic_member = GenericMember.objects.create(
+            user= self.user2, content_type= self.content_type_obj,
+            object_id= self.group1.id
+            )
+        generic_member.role = role1
+        generic_member.save()
+
+        res = self.client.post(reverse("update-member-role",
+            kwargs={"content_type_id":self.content_type_obj.id,\
+            "object_id":self.group1.id}), data={"role_id": role2.id,\
+             "user_id": self.user2.id})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json()['message'], "success")
+
+        res = self.client.post(reverse("update-member-role",
+            kwargs={"content_type_id":self.content_type_obj.id,\
+            "object_id":self.group1.id}), data={"user_id": self.user2.id})
+
+        self.assertEqual(res.json()['error'], True)
+        self.assertEqual(res.json()['message'], "required role id")
+
+        res = self.client.post(reverse("update-member-role",
+            kwargs={"content_type_id":self.content_type_obj.id,\
+            "object_id":self.group1.id}), data={"role_id": "null",
+            "user_id": self.user2.id})
+
+        self.assertEqual(res.json()['message'], "success")
+
+        generic_member = GenericMember.objects.get(user= self.user2,
+            content_type= self.content_type_obj,
+            object_id= self.group1.id)
+
+        self.assertEqual(generic_member.role, None)
