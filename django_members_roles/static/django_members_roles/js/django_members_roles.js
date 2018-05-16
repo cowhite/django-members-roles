@@ -1,10 +1,9 @@
-var $manageStaff = $("#manage-staff"),
-    contentTypeId = $manageStaff.data("content_type_id"),
-    objectId = $manageStaff.data("object_id");
+var $manageStaff = $("#manage-staff");
 
 var staffList = function(url){
  if(!url){
-  url = "/django_members_roles/"+contentTypeId+"/"+objectId+"/staff_list/";
+  url = $manageStaff.data("staff_list_url");
+  //url = "/django_members_roles/"+contentTypeId+"/"+objectId+"/staff_list/";
 }
 $.ajax({
   url: url,
@@ -22,7 +21,8 @@ $.ajax({
 
 var roleList = function(url){
  if(!url){
-  url = "/django_members_roles/"+contentTypeId+"/"+objectId+"/role_list/";
+  url = $manageStaff.data("role_list_url");
+  //url = "/django_members_roles/"+contentTypeId+"/"+objectId+"/role_list/";
 }
 $.ajax({
   url: url,

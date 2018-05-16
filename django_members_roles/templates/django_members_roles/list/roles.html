@@ -15,8 +15,8 @@
         <div class='row role'>
           <div class="col-md-3">{{ role.name }}</div>
           <div class="col-md-9 ">
-             <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-edit-role" data-url="{% url 'create-and-update-role' content_type_id object_id %}?role_id={{ role.id }}" data-aftersuccess="roleList" >Edit Role</a>
-             <a class="btn btn-danger btn-action btn-action-delete" id="delete-role" data-url="{% url 'delete-role' content_type_id object_id role.id %}" data-parent-class='role' data-aftersuccess="roleList" data-request-type="post">Delete</a>
+             <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-edit-role" data-url="{% url 'django-members-roles:create-and-update-role' content_type_id object_id %}?role_id={{ role.id }}" data-aftersuccess="roleList" >Edit Role</a>
+             <a class="btn btn-danger btn-action btn-action-delete" id="delete-role" data-url="{% url 'django-members-roles:delete-role' content_type_id object_id role.id %}" data-parent-class='role' data-aftersuccess="roleList" data-request-type="post">Delete</a>
           </div>
         </div>
       {% endfor %}

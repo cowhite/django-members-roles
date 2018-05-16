@@ -96,7 +96,7 @@ class MembershipInvitation(DateTimeBase):
         site_id = settings.SITE_ID
         site = Site.objects.get(id=site_id)
         membership_invitation_url = os.path.join(
-            site.domain, reverse("accept-decline-invitation", kwargs={"uu_id": self.code.hex})[1:])
+            site.domain, reverse("django-members-roles:accept-decline-invitation", kwargs={"uu_id": self.code.hex})[1:])
 
         return membership_invitation_url
 

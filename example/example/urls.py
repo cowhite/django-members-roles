@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Mount django_members_roles
-    url(r'^django_members_roles/', include('django_members_roles.urls')),
+    url(r'^django_members_roles/', include('django_members_roles.urls', namespace='django-members-roles')),
     url(r'^organizations/$', login_required(OrganizationFullView.as_view()),
         name="organizations"),
     url(r'^new_organization/$', login_required(OrganizationCreateView.as_view()),
