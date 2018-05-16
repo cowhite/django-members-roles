@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Django-members-roles's documentation!
-======================================
+================================================
 
 .. toctree::
    :maxdepth: 2
