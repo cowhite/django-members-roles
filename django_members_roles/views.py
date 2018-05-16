@@ -106,7 +106,7 @@ class DeleteRoleView(generic_views.DeleteView):
     def get_success_url(self, *args, **kwargs):
         content_type_id = self.kwargs['content_type_id']
         object_id = self.kwargs['object_id']
-        return reverse("role-list",
+        return reverse("django-members-roles:role-list",
                        kwargs={"content_type_id": content_type_id,
                                "object_id": object_id})
 
@@ -156,7 +156,7 @@ class AcceptDeclineInvitationView(generic_views.View):
             invitation = MembershipInvitation.objects.get(
                 code=uu_id, email=self.request.user.email)
         except MembershipInvitation.DoesNotExist:
-            return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('messages'))
+            return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('django-members-roles:messages'))
         return render(request, "django_members_roles/includes/accept_decline_invitation.html",
                       {"uu_id": uu_id, "invitation": invitation})
 
@@ -184,15 +184,15 @@ class AcceptDeclineInvitationView(generic_views.View):
                 invitation.user = user
                 invitation.save()
             except MembershipInvitation.DoesNotExist:
-                return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('messages'))
+                return redirect("%s?msg=You don't have permission to accept this invitation" % reverse('django-members-roles:messages'))
             if accept_status =="True":
-                return redirect("%s?msg=Thank you for accepting this invitation" % reverse('messages'))
+                return redirect("%s?msg=Thank you for accepting this invitation" % reverse('django-members-roles:messages'))
             elif accept_status == "False":
-                return redirect("%s?msg=You declined this invitation" % reverse('messages'))
+                return redirect("%s?msg=You declined this invitation" % reverse('django-members-roles:messages'))
             else:
-                return redirect("%s?msg=Somthing went wrong please contact admin" % reverse('messages'))
+                return redirect("%s?msg=Somthing went wrong please contact admin" % reverse('django-members-roles:messages'))
         else:
-            return redirect("%s?msg=You don't have permission to accept this invitation" %reverse('messages'))
+            return redirect("%s?msg=You don't have permission to accept this invitation" %reverse('django-members-roles:messages'))
 
 
 def message_view(request):
