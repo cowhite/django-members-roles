@@ -50,6 +50,25 @@ Or, you can do it using post_save signal::
         generic_member = models.OneToOneField(GenericMember)
         additional_field = models.TextField()
 
+- For every url that you want to check whether the current user has the permissions, you need to send the query parameters to that url like this::
+
+    <a href="{% url 'abc' %}?content_type_id=12&object_id=1">Some link</a>
+
+    Where the strings content_type_id and object_id can be changed by changing the settings DJANGO_MEMBERS_ROLES_QUERY_PARAM_CONTENT_TYPE_ID and DJANGO_MEMBERS_ROLES_QUERY_PARAM_OBJECT_ID.
+
+    For example, if you set them as "cti" and "oi" in settings
+
+    DJANGO_MEMBERS_ROLES_QUERY_PARAM_CONTENT_TYPE_ID = "cti"
+    DJANGO_MEMBERS_ROLES_QUERY_PARAM_OBJECT_ID = "oi"
+
+    then, you can send the url like
+
+    <a href="{% url 'abc' %}?cti=12&oi=1">Some link</a>
+
+    Here content_type_id is the content type id of the group(for example Organization) and object_id is the id of the instance of that Organization.
+
+    Only this way, the middleware(or the decorator) that we developed will check the current user for permissions.
+
 How to use ?
 ------------
 
