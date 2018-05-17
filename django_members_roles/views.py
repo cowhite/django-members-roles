@@ -120,23 +120,14 @@ class StaffListView(generic_views.TemplateView):
         content_type = ContentType.objects.get(
             id=self.kwargs['content_type_id'])
         object_id = self.kwargs['object_id']
-        confirmation_required = app_settings.DJANGO_MEMBERS_ROLES_CONFIRMATION_REQUIRED
         roles = Role.objects.filter(
             content_type=content_type, object_id=object_id)
-        if not confirmation_required:
-            invitations = MembershipInvitation.objects.filter(
-                content_type=content_type,
-                object_id=object_id).exclude(
-                decline_invitation=True, user=None)
-            invitations_list = list(
-                invitations.values_list("user_id", flat=True))
-        else:
-            invitations = MembershipInvitation.objects.filter(
-                content_type=content_type,
-                object_id=object_id,
-                accepted_invitation=True)
-            invitations_list = list(
-                invitations.values_list("user_id", flat=True))
+        invitations = MembershipInvitation.objects.filter(
+            content_type=content_type,
+            object_id=object_id,
+            accepted_invitation=True)
+        invitations_list = list(
+            invitations.values_list("user_id", flat=True))
 
         users = User.objects.filter(id__in=invitations_list)
         generic_members = GenericMember.objects.filter(
