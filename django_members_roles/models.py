@@ -268,7 +268,10 @@ def has_url_permission(request):
         pass
     return True
 
-def create_admin_role(user, content_type, object_id):
+def create_admin_role(content_object, user):
+    content_type = ContentType.objects.get_for_model(content_object)
+    object_id = content_object.id
+
     try:
         generic_member = GenericMember.objects.get(
             user=user, content_type= content_type, object_id= object_id)

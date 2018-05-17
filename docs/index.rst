@@ -12,6 +12,7 @@ Welcome to Django-members-roles's documentation!
 
    overview
    installation
+   usage
    configuration
 
 

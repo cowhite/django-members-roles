@@ -14,6 +14,11 @@ Required settings in settings.py::
         #...
     ]
 
+Add to urls.py. Note that the exact namespacec of django-members-roles is mandatory::
+
+    url(r'^django_members_roles/', include(
+        'django_members_roles.urls', namespace='django-members-roles')),
+
 Optional settings in settings.py(more details in configuration)::
 
     DJANGO_MEMBERS_ROLES_CONFIRMATION_REQUIRED # Default is True

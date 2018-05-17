@@ -35,7 +35,9 @@ DJANGO_MEMBERS_ROLES_INVITATION_METHOD
     Allowed values:
 
         celery # Preferred
+
         cron
+
         direct
 
     Celery:
