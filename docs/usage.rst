@@ -59,6 +59,20 @@ After visiting the url 'django-members-roles:manage-staff', you will have option
 
 Project Url:
 ------------
+Go to the admin url '/admin/django_members_roles/projecturl/' and then click the button on the top right 'update project urls' which will take few seconds or minutes to update the list of project urls from your project.
+
+Url Permission:
+---------------
+Add a new url permission at /admin/django_members_roles/urlpermissionrequired/add/ by selecting respective project url and necessary permissions required for that url. When checking, we will check whether the role belonging to the currently logged in user(for that content type) has all the permissions mentioned for this url. If atleast one permission is not present for that role of the currently logged in user(for that content type) then it will return 403 Permission Denied. All this happens with the help of a decorator or middleware that we developed.
+
+Role Permission:
+----------------
+This might be little confusing so handle with little care. This model has two fields, one is content_type and the other is permissions. This must be added only in the admin. The developer need to decide the permissions that a group member can add to the roles for a group. As you know, a single project will have lots of permissions for many models. When the admin of the group is adding the permissions for a role, we should show only few options in the dropdown rather than all. So, the developer need to decide what are the permissions that may be required for a content type(or a group) and then add all those permissions to the content type in this role permission model.
+
+Role:
+-----
+When adding/editing a role in the interface we developed at 'django-members-roles:manage-staff', you can add all the permissions for that role. You can only pick some of the permissions here, not all. The list permissions in the dropdown shown here is dependant on the permissions enabled for a content type(that we added in RolePermission model).
+
 
 
 

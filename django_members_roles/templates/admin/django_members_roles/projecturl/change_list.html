@@ -50,9 +50,9 @@
               </a>
             </li>
             <li>
-              <form action='{% url 'update-project-urls' %}' method="post">
+              <form action='{% url 'django-members-roles:update-project-urls' %}' method="post">
               {% csrf_token %}
-              <a href='javascript:;' data-url="{% url 'update-project-urls' %}" id='update-project-urls' >Update project urls</a>
+              <a href='javascript:;' data-url="{% url 'django-members-roles:update-project-urls' %}" id='update-project-urls' >Update project urls</a>
               </form>
             </li>
             {% endif %}
