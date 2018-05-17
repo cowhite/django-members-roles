@@ -40,7 +40,7 @@ Or, you can do it using post_save signal::
 
 - In the group page(or whereever you want), place the link to manage staff. This is the link where we have done all the invitation system, role adding etc. Dont forget the namespace.::
 
-    {% url 'django-members-roles:manage-staff' content_type_id object_id %}
+    {% url 'django-members-roles:manage-members' content_type_id object_id %}
 
 - This app adds the staff/members of the group to the model GenericMember that we have added. But if you want to have additional fields to the members, you can add a one to one model like this::
 
@@ -74,7 +74,7 @@ How to use ?
 
 Invitation System Usage:
 ------------------------
-After visiting the url 'django-members-roles:manage-staff', you will have options to see the members, add new member, see the roles and add new role. You can click "add member" to add a new member. And click "Member List" to see the list of members. You can invite multiple people at once.
+After visiting the url 'django-members-roles:manage-members', you will have options to see the members, add new member, see the roles and add new role. You can click "add member" to add a new member. And click "Member List" to see the list of members. You can invite multiple people at once.
 
 Project Url:
 ------------
@@ -90,7 +90,7 @@ This might be little confusing so handle with little care. This model has two fi
 
 Role:
 -----
-When adding/editing a role in the interface we developed at 'django-members-roles:manage-staff', you can add all the permissions for that role. You can only pick some of the permissions here, not all. The list permissions in the dropdown shown here is dependant on the permissions enabled for a content type(that we added in RolePermission model).
+When adding/editing a role in the interface we developed at 'django-members-roles:manage-members', you can add all the permissions for that role. You can only pick some of the permissions here, not all. The list permissions in the dropdown shown here is dependant on the permissions enabled for a content type(that we added in RolePermission model).
 
 
 

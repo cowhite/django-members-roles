@@ -44,7 +44,7 @@ class GenericMemberFullViewTestCase(Common):
 
     def test_staff_full_view(self):
         self.client.login(username= self.user1, password= "a")
-        res = self.client.get(reverse("django-members-roles:manage-staff",
+        res = self.client.get(reverse("django-members-roles:manage-members",
             kwargs={"content_type_id":self.content_type_obj.id,\
             "object_id":self.group1.id}))
         self.assertEqual(res.context['object_id'], str(self.group1.id))
@@ -56,7 +56,7 @@ class GenericMemberTestCase(Common):
     def test_sending_invitation(self):
         self.client.login(username=self.user1, password="a")
         emails = "user4@example.com,user5@example.com,user6@example.com"
-        res = self.client.post(reverse("django-members-roles:add-staff",
+        res = self.client.post(reverse("django-members-roles:add-member",
             kwargs={"content_type_id":self.content_type_obj.id,\
             "object_id":self.group1.id}),{"emails": emails})
         invitations = MembershipInvitation.objects.filter(
@@ -159,7 +159,7 @@ class GenericMemberTestCase(Common):
         self.assertEqual(invitation_obj.id, invitation.id)
         self.assertEqual(invitation_obj.email, invitation.email)
         self.assertEqual(invitation.accepted_invitation, True)
-        res = self.client.get(reverse("django-members-roles:staff-list", \
+        res = self.client.get(reverse("django-members-roles:member-list", \
             kwargs= {"content_type_id": self.content_type_obj.id,
             "object_id": self.group1.id}))
         generic_obj = GenericMember.objects.create(
@@ -265,8 +265,8 @@ class GenericMemberRoleTestCase(Common):
         res = self.client.post(reverse("django-members-roles:update-project-urls"))
         project_urls_obj = ProjectUrl.objects.all()
         self.assertNotEqual(project_urls_old_obj_count, project_urls_obj.count())
-        add_staff_url = project_urls_obj.get(name="add-staff")
-        self.assertEqual(add_staff_url.name, "add-staff")
+        add_staff_url = project_urls_obj.get(name="add-member")
+        self.assertEqual(add_staff_url.name, "add-member")
         genericmember_content = ContentType.objects.get(
             app_label='django_members_roles', model='genericmember')
         permission = Permission.objects.get(
@@ -288,7 +288,7 @@ class GenericMemberRoleTestCase(Common):
             )
 
         url = "%s?%s=%s&%s=%s" % (
-            reverse("django-members-roles:add-staff",
+            reverse("django-members-roles:add-member",
             kwargs={"content_type_id":self.content_type_obj.id,\
             "object_id":self.group1.id}),
             app_settings.DJANGO_MEMBERS_ROLES_QUERY_PARAM_CONTENT_TYPE_ID,

@@ -1,11 +1,11 @@
 {% extends 'django_members_roles/base.html' %}
 
 {% block content %}
-<div id='manage-staff' data-content_type_id="{{ content_type_id }}" data-object_id="{{ object_id }}" data-staff_list_url="{% url 'django-members-roles:staff-list' content_type_id object_id %}" data-role_list_url="{% url 'django-members-roles:role-list' content_type_id object_id %}">
+<div id='manage-staff' data-content_type_id="{{ content_type_id }}" data-object_id="{{ object_id }}" data-staff_list_url="{% url 'django-members-roles:member-list' content_type_id object_id %}" data-role_list_url="{% url 'django-members-roles:role-list' content_type_id object_id %}">
   <h1>Manage Members</h1>
 
-  <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-staff" data-url="{% url 'django-members-roles:add-staff' content_type_id object_id %}?content_type_id={{ content_type_id }}&object_id={{ object_id }}" data-aftersuccess="staffList" >Add Member</a>
-  <a href="#staff" class='btn btn-primary change-tab' data-data='{"url":"{% url "django-members-roles:staff-list" content_type_id object_id %}"}' data-tab="staff">Member List</a>
+  <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-staff" data-url="{% url 'django-members-roles:add-member' content_type_id object_id %}?content_type_id={{ content_type_id }}&object_id={{ object_id }}" data-aftersuccess="staffList" >Add Member</a>
+  <a href="#staff" class='btn btn-primary change-tab' data-data='{"url":"{% url "django-members-roles:member-list" content_type_id object_id %}"}' data-tab="staff">Member List</a>
   <a href="javascript:;" class="btn btn-primary btn-show-submit-form btn-show-form" id="btn-show-form-add-role" data-url="{% url 'django-members-roles:create-and-update-role' content_type_id object_id %}" data-aftersuccess="roleList" >Add Role</a>
   <a href="#roles" class='btn btn-primary change-tab' data-data='{"url":"{% url "django-members-roles:role-list" content_type_id object_id %}"}' data-tab="staff">Role List</a>
 
