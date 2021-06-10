@@ -19,7 +19,7 @@ setup(
     author='Cowhite Software Pvt Ltd',
     author_email='hello@cowhite.com',
     python_requires=">=2.7,<=3.6",
-    install_requires=["django >= 1.11, < 1.12"],
+    install_requires=["django >= 1.11, < 2.3"],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
